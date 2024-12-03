@@ -1,1 +1,56 @@
-empty
+<!DOCTYPE html><meta name="description" content="Calculates the most cost effective way to get donation xp">
+<title>HyCalcs | Museum Donation Calculator</title><meta charset="UTF-8"><meta name="viewport"content="width=device-width,initial-scale=1.0"><link rel="icon"type="image/png"href="./favicon32.png">
+<style>@import url(https://fontlibrary.org/en/face/minecraftia);
+body{background:#000;color:#fff;font-family:minecraftia,arial;margin:5vh 0 0 5vw}
+div{white-space:pre}h1{color:#fa0}
+a{text-decoration:none;color:#55f}
+input{background:none;border:2px solid #5f5;padding:6px 12px;color:#fff;font-family:minecraftia}
+input::placeholder{font-family:minecraftia}
+input:focus{outline:none}
+button{
+	margin-left:20px;
+	padding:8px 12px;
+	border:none;
+	cursor:pointer;
+	background:url('https://i.ibb.co/rb2TWXL/bgbtn.png')center/cover;
+	image-rendering:pixelated;
+	font-family:minecraftia;
+	color:#ddd;
+	text-shadow:2px 2px #222;
+	box-shadow:inset -2px -4px #0006,inset 2px 2px #FFF7;
+}
+button:hover{color:#ffffa0;background:#6969af}
+button:active{background:#54548c}
+</style>
+<h1>Museum Donation Calculator</h1>
+<div>
+This computes the items', you haven't donated yet, raw cost to get, dividing with the items' donation xp<br>
+ex) 
+item 1 = 2xp/1750coins	= 0.001142857143
+item 2 = 1xp/950coins	= 0.001052631579
+
+item 1 gives more xp per coin (higher number = better bang for your buck)
+
+</div>
+<input id='name' maxlength='16' placeholder='Enter Minecraft Name...'><button id='calc' type='button'>Calculate</button>
+<script>
+function url(a,b){return 'hypixel.net/v2/skyblock/'+a+'?key=58d3fa5b-b7fc-4a10-a01e-b79a17d1ed4b&'+b}
+function get(x){return fetch('https://api.'+x).then(r=>r.json())}
+
+document.getElementById('calc').onclick=()=>{
+	get('minetools.eu/uuid/KosmicEntity').then(data=>{
+		let uuid = data.id
+		get(url('profiles','uuid='+uuid)).then(data=>{
+			for (const profile of data.profiles){
+				if (profile.selected){ // edge case, none of them are selected
+					get(url('museum','profile='+profile.profile_id)).then(data=>{
+						data = Object.keys(data.members[uuid].items)
+						console.log(data)
+					})
+				}
+			}
+		})
+	})
+}
+document.getElementById('calc').click()
+</script>
